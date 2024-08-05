@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+        }
+
+        #title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #232f3e;
+            color: #fff;
+        }
+
+        #searchBox {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            width: 300px;
+        }
+
+        #searchButton {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            background: #febd69;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background: #f08804;
+        }
+
+        #homeButton, #signInButton, .dropdown .dropbtn, #kart a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem;
+            background: #f08804;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #000;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        #kart {
+            display: flex;
+            align-items: center;
+        }
+
+        #cartIcon {
+            width: 30px;
+            margin-right: 0.5rem;
+        }
+
+        #cartItems {
+            padding: 2rem;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .separator {
+            margin: 1rem 0;
+        }
+
+        .item-image .image {
+            width: 100px;
+            height: auto;
+        }
+
+        .item-details {
+            flex: 1;
+            padding-left: 1rem;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .remove-link {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        .remove-link:hover {
+            text-decoration: underline;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #total {
+            font-weight: bold;
+            color: #333;
+            text-align: right;
+        }
+
+        .checkout-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: #febd69;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .checkout-button:hover {
+            background: #f08804;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const removeLinks = document.querySelectorAll(".remove-link");
+
+            removeLinks.forEach(link => {
+                link.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    const productId = this.dataset.productId;
+
+                    fetch(`/removeFromCart?productId=${productId}`, {
+                        method: "GET",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            
+                            this.closest('.cart-item').remove();
+
+                            
+                            window.location.reload();
+                        } else {
+                            alert("Failed to remove item from cart");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="title">
+        
+
+        <div id="homeButton">
+            <a class="link" href="/">Home</a>
+        </div>
+
+        {% if not loggedIn %}
+            <div id="signInButton">
+                <a class="link" href="/loginForm">Sign In</a>
+            </div>
+        {% else %}
+            <div class="dropdown">
+                <button class="dropbtn">Hello, <br>{{firstName}}</button>
+                <div class="dropdown-content">
+                    <a href="/account/orders">Your orders</a>
+                    <a href="/account/profile">Your profile</a>
+                    <hr>
+                    <a href="/logout">Sign Out</a>
+                </div>
+            </div>
+        {% endif %}
+        <div id="kart">
+            <a class="link" href="/cart">
+                <img src="{{url_for('static', filename='images/shoppingCart.png')}}" id="cartIcon" />
+                <span>CART {{noOfItems}}</span>
+            </a>
+        </div>
+    </div>
+    <div id="cartItems">
+        <h2>Shopping Cart</h2>
+        <div id="tableItems">
+            {% for row in products %}
+            <div class="cart-item">
+                <hr class="separator">
+                <div class="item-image">
+                    <img src="{{url_for('static', filename='uploads/'+row[3])}}" class="image" />
+                </div>
+                <div class="item-details">
+                    <span class="item-name">{{row[1]}}</span><br>
+                    In stock<br>
+                    <a href="#" class="remove-link" data-product-id="{{row[0]}}">Remove</a>
+                </div>
+                <div class="item-price">
+                    Rs {{row[2]}}
+                </div>
+            </div>
+            {% endfor %}
+            <hr class="separator">
+            <div id="total">
+                <span id="subtotal">Subtotal</span>: Rs {{totalPrice}}
+            </div>
+        </div>
+    </div>
+    <a href="/checkout" class="checkout-button">Proceed to checkout</a>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category: {{categoryName}}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+    }
+
+    .navbar {
+      height: 60px;
+      background-color: #0f1111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      padding: 0 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-logo img {
+      width: 128px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    form {
+      display: flex;
+    }
+
+    .product-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 50px;
+    }
+
+    .product {
+      max-width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .product img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .product h4 {
+      margin: 10px 0;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .product p {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .product .price {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #c7511f;
+    }
+
+    .buy-button {
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: #c7511f;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .buy-button:hover {
+      background-color: #ad3d0d;
+    }
+
+    .footer-section {
+      background-color: #232f3e;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .footer-section a {
+      color: #f3f3f3;
+      text-decoration: none;
+    }
+
+    .footer-section p {
+      color: #666;
+    }
+
+    .amazon-choice {
+      background-color: #232f3e;
+      color: #fff;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+    }
+
+    .delivery-info {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    .cart-info {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .cart-info img {
+      width: 24px;
+      height: auto;
+    }
+
+    .cart-info span {
+      margin-left: 5px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+    }
+  </style>
+</head>
+<header>
+  <nav class="navbar">
+    <div class="nav-logo">
+    </div>
+    <div class="nav-links">
+     
+      <div id="homeButton">
+        <a class="link" href="/">Home</a>
+      </div>
+      <div class="cart-info">
+        <a class="link" href="/cart">
+          <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" alt="Cart">
+          <span>CART {{noOfItems}}</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+<body>
+
+  <section class="product-section">
+    {% for itemData in data %}
+    {% for row in itemData %}
+    <div class="product">
+      <a href="/productDescription?productId={{row[0]}}">
+        <img src="{{ url_for('static', filename='uploads/' + row[3]) }}" alt="{{row[1]}}">
+      </a>
+      <h4>{{row[1]}}</h4>
+      <p>{{row[4]}}</p>
+      <p class="price">&#8377;{{row[2]}}</p>
+      <p class="delivery-info">
+        <span class="product-prime">Prime</span>
+        Get it by <strong>Tomorrow</strong><br>
+        FREE delivery
+      </p>
+      <a href="/addToCart?productId={{row[0]}}" class="buy-button">Buy Now</a>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </section>
+
+  <footer>
+    <div class="footer-section">
+      <br><br>
+      <a href="/">Back to Home</a>
+      <p>&copy; 2024 All rights reserved.</p>
+      <br><br><br>
+    </div>
+  </footer>
+
+</body>
+</html>

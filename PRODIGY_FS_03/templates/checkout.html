@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+		
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+}
+
+#header-content {
+    background-color: #232f3e;
+    color: #fff;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#logo a {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: #febd69;
+    transition: background-color 0.3s;
+}
+
+#logo a:hover {
+    background-color: #f0a500;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown .dropbtn {
+    background-color: #f08804;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: #000;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+#kart {
+    display: flex;
+    align-items: center;
+}
+
+#cartIcon {
+    width: 30px;
+    margin-right: 0.5rem;
+}
+
+/* Main content styles */
+main {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.checkout-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+#total {
+    margin-bottom: 2rem;
+}
+
+.pay-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.pay-button:hover {
+    background-color: #2980b9;
+}
+
+	</style>
+</head>
+<body>
+    <header>
+        <div id="header-content">
+            <div id="logo">
+                <a href="/">Home</a>
+            </div>
+
+            {% if not loggedIn %}
+                <div id="signInButton">
+                    <a class="link" href="/loginForm">Sign In</a>
+                </div>
+            {% else %}
+                <div class="dropdown">
+                    <button class="dropbtn">Hello, <br>{{firstName}}</button>
+                    <div class="dropdown-content">
+                        <a href="/account/orders">Your orders</a>
+                        <a href="/account/profile">Your profile</a>
+                        <hr>
+                        <a href="/logout">Sign Out</a>
+                    </div>
+                </div>
+            {% endif %}
+            <div id="kart">
+                <a class="link" href="/cart">
+                    <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
+                    CART {{noOfItems}}
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="checkout-container">
+            <h1>Checkout</h1>
+            <div id="total">
+                <span id="subtotal">Proceed to pay Rs {{totalPrice}}</span>
+            </div>
+            <a href="#" class="pay-button">Pay</a>
+        </div>
+    </main>
+</body>
+</html>

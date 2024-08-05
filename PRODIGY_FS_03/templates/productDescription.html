@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Description</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+.navbar {
+  height: 50px;
+  background-color: #0f1111;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.navbar form {
+  display: flex;
+}
+
+#searchBox {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  box-sizing: border-box;
+}
+
+
+.navbar .nav-items {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .nav-items a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0 15px;
+  line-height: 60px;
+}
+
+.navbar .nav-items a:hover {
+  text-decoration: underline;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #0f1111;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+#kart {
+  display: flex;
+  align-items: center;
+}
+
+#kart img {
+  width: 24px;
+  height: auto;
+  margin-right: 5px;
+}
+
+#display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#productName h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+#productImage {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+#productDescription {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+#productDescription h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+#descriptionTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#descriptionTable tr td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+#descriptionTable tr td:first-child {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+#descriptionTable tr td:last-child {
+  text-align: right;
+}
+
+#addToCart {
+  margin-top: 20px;
+}
+
+#addToCart a {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #c7511f;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#addToCart a:hover {
+  background-color: #ad3d0d;
+  transform: scale(1.05);
+}
+
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-items">
+      <a href="/">Home</a>
+    </div>
+
+    {% if not loggedIn %}
+    <div id="signInButton">
+      <a class="link" href="/loginForm">Sign In</a>
+    </div>
+    {% else %}
+    <div class="dropdown">
+      <button class="dropbtn">Hello, <br>{{firstName}}</button>
+      <div class="dropdown-content">
+        <a href="/account/orders">Your orders</a>
+        <a href="/account/profile">Your profile</a>
+        <hr>
+        <a href="/logout">Sign Out</a>
+      </div>
+    </div>
+    {% endif %}
+    <div id="kart">
+      <a class="link" href="/cart">
+        <img src="{{url_for('static', filename='images/shoppingCart.png')}}" id="cartIcon" />
+        CART {{noOfItems}}
+      </a>
+    </div>
+  </div>
+
+  <div id="display">
+    <div id="productName">
+      <h1>{{data[1]}}</h1>
+    </div>
+    <div>
+      <img src="{{url_for('static', filename='uploads/'+data[4]) }}" id="productImage" />
+    </div>
+
+    <div id="productDescription">
+      <h2>Details</h2>
+      <table id="descriptionTable">
+        <tr>
+          <td>Name</td>
+          <td>{{data[1]}}</td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td>Rs {{data[2]}}</td>
+        </tr>
+        <tr>
+          <td>Stock</td>
+          <td>{{data[5]}}</td>
+        </tr>
+      </table>
+      <h2>Description</h2>
+      <p>{{data[3]}}</p>
+    </div>
+    <div id="addToCart">
+      <a href="/addToCart?productId={{request.args.get('productId')}}">Add to Cart</a>
+    </div>
+  </div>
+</body>
+</html>
